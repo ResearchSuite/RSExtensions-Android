@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RSExtensions</string>
+    <!--add your maps api key here-->
+    <string name="google_maps_key">replace_me</string>
+</resources>
