@@ -1,1 +1,1 @@
-include ':app', ':rsuiteextensionscore'
+include ':app', ':rsuiteextensionscore', ':rsextensionsrstb'
