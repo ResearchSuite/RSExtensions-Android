@@ -1,4 +1,18 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3"
+        classpath "com.github.dcendents:android-maven-gradle-plugin:1.5"
+    }
+}
 
 android {
     compileSdkVersion 26
@@ -30,4 +44,5 @@ dependencies {
     compile project(':rsuiteextensionscore')
     compile 'com.android.support:appcompat-v7:26.+'
     testCompile 'junit:junit:4.12'
+    compile 'edu.cornell.tech.foundry:researchsuitetaskbuilder:0.0.4'
 }

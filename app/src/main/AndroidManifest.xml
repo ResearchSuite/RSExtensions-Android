@@ -3,6 +3,7 @@
     package="org.researchsuite.rsextensions">
 
     <application
+        android:name=".location.RSApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,21 +15,21 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <!--<activity android:name=".MainActivity">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-        <activity
-            android:name="org.researchsuite.rsuiteextensionscore.MapsMarkerActivity">
+        <activity android:name="org.researchsuite.rsextensions.location.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="org.researchstack.backbone.ui.ViewTaskActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.YADL.Survey"
+            android:windowSoftInputMode="adjustResize"/>
+
+
     </application>
 
 </manifest>

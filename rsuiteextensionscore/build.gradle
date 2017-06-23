@@ -1,4 +1,21 @@
 apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3"
+        classpath "com.github.dcendents:android-maven-gradle-plugin:1.5"
+    }
+}
+
+
 
 android {
     compileSdkVersion 26
@@ -27,9 +44,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:26.+'
+    //compile 'org.researchstack:backbone:1.1.1-SNAPSHOT'
+ //   compile 'org.researchstack:skin:1.1.2'
     compile 'org.researchstack:backbone:1.1.2'
-    compile 'com.google.android.gms:play-services:9.8.0'
+    compile 'com.google.android.gms:play-services-maps:11.0.1'
+    compile 'com.google.android.gms:play-services-location:11.0.1'
 //    compile 'com.google.android.gms:play-services-location:11.0.0'
 //    compile 'com.google.android.gms:play-services-maps:11.0.0'
     testCompile 'junit:junit:4.12'
 }
+
