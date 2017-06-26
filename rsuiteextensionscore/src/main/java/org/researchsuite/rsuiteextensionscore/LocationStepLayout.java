@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -14,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -59,6 +61,8 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
     private GoogleApiClient mGoogleApiClient;
     private Location location;
     private LocationRequest mLocationRequest;
+    private Button mSubmitButton;
+    private String userInput;
 
 
 
@@ -115,6 +119,7 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
 
         this.step = (LocationStep) step;
 
+
         //this.stepResult = result;
         this.stepResult = result == null ? new StepResult<>(step) : result;
         this.initializeStep(this.step, this.stepResult);
@@ -152,6 +157,19 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
         questionDetail = (TextView) findViewById(R.id.question_detail);
         questionDetail.setText(step.getText());
 
+
+        mSubmitButton = (Button) findViewById(R.id.button_submit);
+        mSubmitButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                onSubmitClicked();
+               // callbacks.onSaveStep(StepCallbacks.ACTION_END,this.getStep() ,stepResult);
+
+            }
+        });
+
+
         locationField = (EditText) findViewById(R.id.location_result);
         locationField.setSingleLine(!format.isMultipleLines());
         locationField.setMaxWidth(format.getMaximumLength());
@@ -159,9 +177,9 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if(i == EditorInfo.IME_ACTION_DONE){
-                    String addressSet = locationField.getText().toString();
-                    if (addressSet != "") {
-                        setGivenLocation(addressSet);
+                    userInput = locationField.getText().toString();
+                    if (userInput != "") {
+                        setGivenLocation(userInput);
                     }
                 }
                 return false;
@@ -176,8 +194,12 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
         if (locationField.getText().toString() == "") {
             stepResult.setResult(null);
         } else {
-            LocationStepResult result = new LocationStepResult(step.getIdentifier());
+         //   LocationStepResult result = new LocationStepResult(step.getIdentifier());
+            LocationStepResult result = new LocationStepResult(step);
+            result.setStartDate(stepResult.getStartDate());
+            result.setEndDate(stepResult.getEndDate());
             result.setLongLat(longitude, latitude);
+            result.setUserInput(userInput);
             stepResult.setResult(result);
         }
 
@@ -188,7 +210,6 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
     public boolean isBackEventConsumed() {
         //this will cancel the event
         callbacks.onSaveStep(StepCallbacks.ACTION_PREV,this.step,this.stepResult);
-     //   callbacks.onSaveStep(StepCallbacks.ACTION_END, this.step, this.stepResult);
         return false;
     }
 
@@ -196,6 +217,21 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
     public void setCallbacks(StepCallbacks callbacks) {
         this.callbacks = callbacks;
 
+    }
+
+    public Step getStep(){
+        return this.step;
+    }
+
+    public void onSubmitClicked(){
+        callbacks.onSaveStep(StepCallbacks.ACTION_NEXT,this.getStep(),this.getStepResult());
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState()
+    {
+        callbacks.onSaveStep(StepCallbacks.ACTION_NONE, getStep(), this.getStepResult());
+        return super.onSaveInstanceState();
     }
 
     @Override
@@ -283,6 +319,9 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
 
         Log.d("newlat: ", String.valueOf(newLatitude));
         Log.d("newLong: ", String.valueOf(newLongitude));
+
+        this.longitude = lng;
+        this.latitude = lat;
 
         LatLng newLocation = new LatLng(newLatitude, newLongitude);
         mGoogleMap.addMarker(new MarkerOptions().position(newLocation).title("New Location"));

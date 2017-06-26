@@ -4,24 +4,18 @@ package org.researchsuite.rsuiteextensionscore;
  * Created by Christina on 6/22/17.
  */
 
-import org.researchstack.backbone.result.Result;
+import org.researchstack.backbone.result.StepResult;
+import org.researchstack.backbone.step.Step;
 
-public class LocationStepResult extends Result {
+public class LocationStepResult extends StepResult {
 
-    private String locationResult;
     private Double longitute;
     private Double latitude;
+    private String userInput;
 
-    public LocationStepResult(String identifier) {
-        super(identifier);
-    }
+    public LocationStepResult(Step step) {
+        super(step);
 
-
-    public void setLocationResult(String result) {
-        this.locationResult = result;
-    }
-    public String getLocationResult() {
-        return this.locationResult;
     }
 
     public void setLongLat(Double longitute,Double latitude){
@@ -29,11 +23,10 @@ public class LocationStepResult extends Result {
         this.latitude = latitude;
     }
 
-    public Double getLongitute() {
-        return this.longitute;
+    public void setUserInput(String userInput){
+        this.userInput = userInput;
     }
 
-    public Double getLatitude() {
-        return this.latitude;
-    }
+
+
 }

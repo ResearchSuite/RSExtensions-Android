@@ -20,6 +20,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+
 //rsextensionsrstb/src/main/java/org/researchsuite/rsextensionsrstb/LocationStepGenerator.java
 
 /**
@@ -179,6 +180,13 @@ public class RSActivityManager {
         assert(activityRun != null);
 
         LogExt.d(getClass(), String.valueOf(taskResult));
+        Log.d("stepresult",String.valueOf(taskResult));
+
+        if(activityRun.identifier.equals("instruction")){
+
+
+        }
+
 
 
         this.tryToLaunchActivity(context);
