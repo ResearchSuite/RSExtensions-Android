@@ -1,33 +1,23 @@
 package org.researchsuite.rsuiteextensionscore;
 
-import org.researchstack.backbone.answerformat.AnswerFormat;
-import org.researchstack.backbone.step.QuestionStep;
+import org.researchstack.backbone.step.Step;
 
 /**
  * Created by Christina on 6/20/17.
  */
 
-public class LocationStep extends QuestionStep {
+public class LocationStep extends Step {
 
     @Override
     public Class getStepLayoutClass() {
         return LocationStepLayout.class;
     }
 
-
-    /** Returns a new question step that includes the specified identifier, title, question and
-     * answer format
+    /** Returns a new location step that includes the specified identifier
      * @param identifier The identifier of the step
-     * @param title A string representing primary question of the Location question
-     * @param answerFormat The formart in which the answer is expected
      */
-
-    public LocationStep(String identifier, String title, AnswerFormat answerFormat) {
-        super(identifier,title,answerFormat);
-
-
+    public LocationStep(String identifier) {
+        super(identifier);
     }
-
-
 
 }

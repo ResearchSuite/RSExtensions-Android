@@ -16,6 +16,7 @@ import org.researchsuite.rsextensions.studyManagement.CTFActivityRun;
 import org.researchsuite.rsextensions.studyManagement.CTFScheduleItem;
 import org.researchsuite.rsextensionsrstb.LocationStepGenerator;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -147,32 +148,32 @@ public class RSActivityManager {
     @Nullable
     public Task loadTask(Context context, CTFActivityRun activityRun) {
 
-        LocationStepGenerator stepGenerator = new LocationStepGenerator(RSTaskBuilderManager.getBuilder().getStepBuilderHelper(),"textfield",activityRun.activity.getAsJsonObject());
-
-        Step step = stepGenerator.generateStep(RSTaskBuilderManager.getBuilder().getStepBuilderHelper(),"textfield",activityRun.activity.getAsJsonObject());
-
-        if (step != null){
-            return new OrderedTask(activityRun.identifier,step);
-        }
-        else {
-            return null;
-        }
-
-
-//        List<Step> stepList = null;
-//        try {
-//            stepList = RSTaskBuilderManager.getBuilder().stepsForElement(activityRun.activity);
-//        }
-//        catch(Exception e) {
-//            Log.w(this.TAG, "could not create steps from task json", e);
-//            return null;
-//        }
-//        if (stepList != null && stepList.size() > 0) {
-//            return new OrderedTask(activityRun.identifier, stepList);
+//        LocationStepGenerator stepGenerator = new LocationStepGenerator(RSTaskBuilderManager.getBuilder().getStepBuilderHelper(),"textfield",activityRun.activity.getAsJsonObject());
+//
+//        Step step = stepGenerator.generateStep(RSTaskBuilderManager.getBuilder().getStepBuilderHelper(),"textfield",activityRun.activity.getAsJsonObject());
+//
+//        if (step != null){
+//            return new OrderedTask(activityRun.identifier,step);
 //        }
 //        else {
 //            return null;
 //        }
+
+
+        List<Step> stepList = null;
+        try {
+            stepList = RSTaskBuilderManager.getBuilder().stepsForElement(activityRun.activity);
+        }
+        catch(Exception e) {
+            Log.w(this.TAG, "could not create steps from task json", e);
+            return null;
+        }
+        if (stepList != null && stepList.size() > 0) {
+            return new OrderedTask(activityRun.identifier, stepList);
+        }
+        else {
+            return null;
+        }
     }
 
     public void completeActivity(Context context, TaskResult taskResult, CTFActivityRun activityRun) {

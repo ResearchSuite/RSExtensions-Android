@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RSExtensions</string>
+    <string name="ancile_base_url">https://ancile.cornelltech.io</string>
+    <string name="ancile_mobile_url_scheme">ancile3ec3082ca348453caa716cc0ec41791e</string>
 </resources>

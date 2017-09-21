@@ -21,6 +21,7 @@ allprojects {
       //  maven { url "https://dl.bintray.com/edu-cornell-tech-foundry/SDLRSX" }
       //  maven { url "https://dl.bintray.com/researchstack/ResearchStack" }
         maven { url "https://dl.bintray.com/edu-cornell-tech-foundry/ResearchSuiteAppFramework" }
+        mavenLocal()
     }
 }
 

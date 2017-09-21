@@ -149,7 +149,7 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
 
         mMapView.getMapAsync(this);
 
-        TextAnswerFormat format = (TextAnswerFormat) ((LocationStep) step).getAnswerFormat();
+//        TextAnswerFormat format = (TextAnswerFormat) ((LocationStep) step).getAnswerFormat();
 
         titleText = (TextView) findViewById(R.id.question_title);
         titleText.setText(step.getTitle());
@@ -171,8 +171,8 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
 
 
         locationField = (EditText) findViewById(R.id.location_result);
-        locationField.setSingleLine(!format.isMultipleLines());
-        locationField.setMaxWidth(format.getMaximumLength());
+        locationField.setSingleLine(true);
+        locationField.setMaxWidth(TextAnswerFormat.UNLIMITED_LENGTH);
         locationField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -186,7 +186,7 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
             }
         });
 
-        step.setAnswerFormat(format);
+//        step.setAnswerFormat(format);
 
     }
 

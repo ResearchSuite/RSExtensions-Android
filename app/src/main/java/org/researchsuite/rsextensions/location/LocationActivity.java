@@ -14,6 +14,8 @@ import org.researchstack.backbone.ui.ViewTaskActivity;
 import org.researchstack.backbone.utils.LogExt;
 import org.researchsuite.rsextensions.studyManagement.CTFActivityRun;
 
+import java.util.Objects;
+
 
 /**
  * Created by jameskizer on 4/21/17.
@@ -129,7 +131,7 @@ public class LocationActivity extends Activity implements RSActivityManagerDeleg
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 0) {
             if (permissions.length == 1 &&
-                    permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION &&
+                    permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // mMap.setMyLocationEnabled(true);
             } else {

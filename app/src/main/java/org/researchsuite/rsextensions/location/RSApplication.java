@@ -11,6 +11,13 @@ import org.researchstack.backbone.storage.database.AppDatabase;
 import org.researchstack.backbone.storage.database.sqlite.SqlCipherDatabaseHelper;
 import org.researchstack.backbone.storage.database.sqlite.UpdatablePassphraseProvider;
 import org.researchstack.backbone.storage.file.UnencryptedProvider;
+import org.researchsuite.rsextensions.R;
+import org.researchsuite.rsextensions.RSTestDelegate;
+import org.researchsuite.rsuiteextensionscore.RSOpenURLDelegate;
+import org.researchsuite.rsuiteextensionscore.RSOpenURLManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jameskizer on 4/12/17.
@@ -69,6 +76,11 @@ public class RSApplication extends Application {
       //  RSTBStepGeneratorService stepGenerator =  RSTBStepGeneratorService.getInstance();
 
 
+        RSTestDelegate.config(getString(R.string.ancile_mobile_url_scheme));
+        List<RSOpenURLDelegate> delegates = new ArrayList<RSOpenURLDelegate>();
+        delegates.add(RSTestDelegate.getInstance());
+
+        RSOpenURLManager.config(delegates);
 
         //config results processor singleton
         //requires RSRPBackend

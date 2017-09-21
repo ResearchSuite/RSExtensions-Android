@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
@@ -14,7 +13,6 @@ buildscript {
         classpath "com.github.dcendents:android-maven-gradle-plugin:1.5"
     }
 }
-
 
 version = '0.0.1'
 
@@ -44,26 +42,22 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.+'
-    //compile 'org.researchstack:backbone:1.1.1-SNAPSHOT'
- //   compile 'org.researchstack:skin:1.1.2'
     compile 'org.researchstack:backbone:1.1.2'
-    compile 'com.google.android.gms:play-services-maps:11.0.1'
-    compile 'com.google.android.gms:play-services-location:11.0.1'
-//    compile 'com.google.android.gms:play-services-location:11.0.0'
-//    compile 'com.google.android.gms:play-services-maps:11.0.0'
+    compile project(':rsuiteextensionscore')
+    compile 'com.android.support:appcompat-v7:26.+'
     testCompile 'junit:junit:4.12'
+    compile 'edu.cornell.tech.foundry:researchsuitetaskbuilder:0.0.4'
 }
 
 ext {
     bintrayRepo = 'ResearchSuiteAppFramework'
-    bintrayName = 'rsuiteextensionscore'
+    bintrayName = 'rsuiteextensionsrstb'
 
     publishedGroupId = 'org.researchsuite'
     libraryName = bintrayName
     artifact = bintrayName
 
-    libraryDescription = 'RSuite Extensions Core is a collection of ResearchStack extensions'
+    libraryDescription = 'RSuite Extensions RSTB provides RSuite Task Builder support'
 
     siteUrl = 'https://researchsuite.org'
     gitUrl = 'https://github.com/ResearchSuite/RSExtensions-Android.git'

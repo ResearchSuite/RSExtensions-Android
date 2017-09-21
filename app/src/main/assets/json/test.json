@@ -4,11 +4,23 @@
   "title": "Instruction",
   "guid": "instruction-1",
   "activity": {
-
+    "type": "elementList",
+    "identifier": "Baseline Survey",
+    "elements": [
+      {
+        "identifier"   : "redirect",
+        "type"         : "testRedirect",
+        "title"        : "Test Redirect",
+        "text"         : "Test the redirect",
+        "buttonText"         : "Sign In"
+      },
+      {
         "identifier"   : "location",
-        "type"         : "textfield",
+        "type"         : "location",
         "title"        : "Please enter your location",
         "text"         : "Test test"
+      }
+    ]
   }
 
 }

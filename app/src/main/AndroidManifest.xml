@@ -29,6 +29,19 @@
             android:theme="@style/Theme.YADL.Survey"
             android:windowSoftInputMode="adjustResize"/>
 
+        <activity
+            android:name="org.researchsuite.rsuiteextensionscore.RSRedirectReceiver"
+            android:label="@string/app_name" >
+            <intent-filter android:label="redirect_receiver_filter">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- note that the leading "/" is required for pathPrefix-->
+                <!-- Accepts URIs that begin with "ancile3ec3082ca348453caa716cc0ec41791e://” -->
+                <data android:scheme="@string/ancile_mobile_url_scheme" />
+            </intent-filter>
+        </activity>
+
 
     </application>
 
