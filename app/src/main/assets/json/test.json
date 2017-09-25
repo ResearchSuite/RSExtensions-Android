@@ -7,18 +7,19 @@
     "type": "elementList",
     "identifier": "Baseline Survey",
     "elements": [
+
+      {
+        "identifier"   : "location",
+        "type"         : "location",
+        "title"        : "Please enter your location",
+        "text"         : "Test test"
+      },
       {
         "identifier"   : "redirect",
         "type"         : "testRedirect",
         "title"        : "Test Redirect",
         "text"         : "Test the redirect",
         "buttonText"         : "Sign In"
-      },
-      {
-        "identifier"   : "location",
-        "type"         : "location",
-        "title"        : "Please enter your location",
-        "text"         : "Test test"
       }
     ]
   }

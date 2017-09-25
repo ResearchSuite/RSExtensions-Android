@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
@@ -103,5 +104,10 @@ public class RSTestDelegate implements RSRedirectStepDelegate {
     @Override
     public Throwable getError() {
         return this.error;
+    }
+
+    @Override
+    public void setHandler(Handler handler) {
+
     }
 }
