@@ -11,8 +11,7 @@
       {
         "identifier"   : "location",
         "type"         : "location",
-        "title"        : "Please enter your location",
-        "text"         : "Test test"
+        "title"        : "Please enter your location"
       },
       {
         "identifier"   : "redirect",

@@ -50,6 +50,7 @@ import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
+import org.researchstack.backbone.ui.views.SubmitBar;
 
 import java.io.IOException;
 
@@ -57,6 +58,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import rx.functions.Action1;
 //import org.researchsuite.rsuiteextensionscore.R;
 
 /**
@@ -73,8 +75,8 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
     private TextView questionDetail;
     private EditText locationField;
     private GoogleMap mGoogleMap;
-    private Double latitude = 0.0;
-    private Double longitude = 0.0;
+//    private Double latitude = 0.0;
+//    private Double longitude = 0.0;
     private StepCallbacks callbacks;
     private MapView mMapView;
     private GoogleApiClient mGoogleApiClient;
@@ -83,6 +85,7 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
     private LocationRequest mLocationRequest;
     private Button mSubmitButton;
     private String userInput;
+    private boolean userPlaced;
     private String formattedAddress;
     private Marker mMarker;
 
@@ -185,15 +188,38 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
         questionDetail.setText(step.getText());
 
 
-        mSubmitButton = (Button) findViewById(R.id.button_submit);
-        mSubmitButton.setOnClickListener(new OnClickListener() {
+//        mSubmitButton = (Button) findViewById(R.id.button_submit);
+//        mSubmitButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                onSubmitClicked();
+//
+//            }
+//        });
+
+        SubmitBar submitBar = (SubmitBar) findViewById(R.id.rsb_submit_bar);
+        submitBar.setPositiveAction(new Action1() {
             @Override
-            public void onClick(View view) {
-
-                onSubmitClicked();
-
+            public void call(Object o) {
+                onNextClicked();
             }
         });
+
+        if (step.isOptional()) {
+            submitBar.setNegativeTitle(R.string.rsb_step_skip);
+            submitBar.setNegativeAction(new Action1() {
+                @Override
+                public void call(Object o) {
+                    onSkipClicked();
+                }
+            });
+        }
+        else {
+            submitBar.getNegativeActionView().setVisibility(View.GONE);
+        }
+
+
 
         locationField = (EditText) findViewById(R.id.location_result);
         locationField.setSingleLine(true);
@@ -217,23 +243,6 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
 
     }
 
-    public StepResult getStepResult() {
-        if (locationField.getText().toString() == "") {
-            stepResult.setResult(null);
-        } else {
-         //   LocationStepResult result = new LocationStepResult(step.getIdentifier());
-            LocationStepResult result = new LocationStepResult(step);
-            result.setStartDate(stepResult.getStartDate());
-            result.setEndDate(stepResult.getEndDate());
-            result.setLongLat(longitude, latitude);
-            result.setUserInput(userInput);
-            result.setAddress(formattedAddress);
-            stepResult.setResult(result);
-        }
-
-        return stepResult;
-    }
-
     @Override
     public boolean isBackEventConsumed() {
         //this will cancel the event
@@ -251,20 +260,77 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
         return this.step;
     }
 
-    public void onSubmitClicked(){
-        callbacks.onSaveStep(StepCallbacks.ACTION_NEXT,this.getStep(),this.getStepResult());
-    }
-
     @Override
     public Parcelable onSaveInstanceState()
     {
-        callbacks.onSaveStep(StepCallbacks.ACTION_NONE, getStep(), this.getStepResult());
+        //don't clear  on rotation
+        callbacks.onSaveStep(StepCallbacks.ACTION_NONE, getStep(), this.getStepResult(false));
         return super.onSaveInstanceState();
     }
+
+    protected void onNextClicked()
+    {
+        callbacks.onSaveStep(StepCallbacks.ACTION_NEXT,
+                this.getStep(),
+                this.getStepResult(false));
+
+    }
+
+    public void onSkipClicked()
+    {
+        if(callbacks != null)
+        {
+            // empty step result when skipped
+            callbacks.onSaveStep(StepCallbacks.ACTION_NEXT,
+                    this.getStep(),
+                    this.getStepResult(true));
+        }
+    }
+
+
+    public StepResult getStepResult(boolean shouldClear) {
+
+        if (shouldClear) {
+            stepResult.setResult(null);
+        }
+        else {
+            LocationResult result = new LocationResult(step.getIdentifier());
+            result.setStartDate(stepResult.getStartDate());
+            result.setEndDate(stepResult.getEndDate());
+            result.setLatitude(this.mMarker.getPosition().latitude);
+            result.setLongitute(this.mMarker.getPosition().longitude);
+            result.setUserPlaced(this.userPlaced);
+            result.setUserInput(userInput);
+            result.setAddress(formattedAddress);
+            stepResult.setResult(result);
+        }
+
+        return stepResult;
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
+
+        mGoogleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                Log.d("onMarkerDragStart: ", marker.getPosition().toString());
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                Log.d("onMarkerDrag: ", marker.getPosition().toString());
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                Log.d("onMarkerDragEnd: ", marker.getPosition().toString());
+                userPlaced = true;
+                handleNewLocation(marker.getPosition(), false, false);
+            }
+        });
 
     }
 
@@ -276,30 +342,44 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
             return;
         }
 
-        this.mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        Log.d("last location: ",String.valueOf(location));
+        if (stepResult.getResult() != null && stepResult.getResult() instanceof LocationResult ) {
 
-                        if (location != null) {
-                            mMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Location"));
-                            handleNewLocation(location);
+            this.setUpFromResult((LocationResult) stepResult.getResult());
 
-                        } else {
-                            LocationAnswerFormat answerFormat = (LocationAnswerFormat) step.getAnswerFormat();
-                            mMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(answerFormat.getDefaultLocation().getLatitude(), answerFormat.getDefaultLocation().getLongitude())).title("Location"));
-                            handleNewLocation(answerFormat.getDefaultLocation());
+
+
+        }
+
+        else {
+            this.mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+
+                            LatLng position;
+
+                            if (location != null) {
+                                position = new LatLng(location.getLatitude(), location.getLongitude());
+                            }
+                            else {
+                                LocationAnswerFormat answerFormat = (LocationAnswerFormat) step.getAnswerFormat();
+                                position = new LatLng(answerFormat.getDefaultLocation().getLatitude(), answerFormat.getDefaultLocation().getLongitude());
+                            }
+
+                            Log.d("last location: ",String.valueOf(location));
+                            mMarker = mGoogleMap.addMarker(new MarkerOptions().position(position).title("Location").draggable(true));
+                            handleNewLocation(position, true, true);
+
                         }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+        }
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                    }
-                });
     }
 
     @Override
@@ -336,7 +416,7 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
                                 @Override
                                 public void run() {
                                     // this will run in the main thread
-                                    updateLocation(response);
+                                    updateLocation(response, true, true);
                                 }
                             });
 
@@ -347,11 +427,11 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
         );
     }
 
-    private void handleNewLocation(Location location) {
+    private void handleNewLocation(LatLng position, final boolean moveCamera, final boolean updateInternalLocation) {
 
         GeocodeAsyncTask.getAddressFromLatLon(getGetGoogleMapsKey(),
-                location.getLatitude(),
-                location.getLongitude(),
+                position.latitude,
+                position.longitude,
                 new GeocodeAsyncTask.GeocodeCompletion() {
                     @Override
                     public void onCompletion(final GeocodeLocationResponse response, Exception e) {
@@ -365,7 +445,7 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
                                 @Override
                                 public void run() {
                                     // this will run in the main thread
-                                    updateLocation(response);
+                                    updateLocation(response, moveCamera, updateInternalLocation);
                                 }
                             });
 
@@ -376,85 +456,43 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
         );
     }
 
-    private void updateLocation(GeocodeLocationResponse locationResponse) {
+    private void setUpFromResult(LocationResult locationResult) {
 
-        this.longitude = locationResponse.longitude;
-        this.latitude = locationResponse.latitude;
-        this.formattedAddress = locationResponse.formattedAddress;
+        LatLng position = new LatLng(locationResult.getLatitude(), locationResult.getLongitute());
 
-        LatLng newLocation = new LatLng(locationResponse.latitude, locationResponse.longitude);
-        this.mMarker.setPosition(newLocation);
-//        mGoogleMap.addMarker(new MarkerOptions().position(newLocation).title("New Location"));
-//        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+        Log.d("Setting location to ",String.valueOf(position));
+        mMarker = mGoogleMap.addMarker(new MarkerOptions().position(position).title("Location").draggable(true));
+        this.formattedAddress = locationResult.getAddress();
+        this.userInput = locationResult.getUserInput();
+
+        locationField.setText(this.userInput);
+
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(newLocation)
+                .target(this.mMarker.getPosition())
                 .zoom(17)
                 .build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-//    @Override
-//    public void processFinish(String output) {
-//
-//        double lng = 0;
-//        double lat = 0;
-//        String formattedAddress = "";
-//
-//        JSONObject jsonObject = null;
-//        try {
-//            jsonObject = new JSONObject(output);
-//            lng = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
-//                    .getJSONObject("geometry").getJSONObject("location")
-//                    .getDouble("lng");
-//
-//
-//            lat = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
-//                    .getJSONObject("geometry").getJSONObject("location")
-//                    .getDouble("lat");
-//
-//            formattedAddress = ((JSONArray) jsonObject.get("results")).getJSONObject(0).getString("formatted_address");
-//            Log.d("formatted address", formattedAddress);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        double newLatitude = lat;
-//        double newLongitude = lng;
-//
-//        Log.d("newlat: ", String.valueOf(newLatitude));
-//        Log.d("newLong: ", String.valueOf(newLongitude));
-//
-//        this.longitude = lng;
-//        this.latitude = lat;
-//        this.formattedAddress = formattedAddress;
-//
-//        LatLng newLocation = new LatLng(newLatitude, newLongitude);
-//        this.mMarker.setPosition(newLocation);
-////        mGoogleMap.addMarker(new MarkerOptions().position(newLocation).title("New Location"));
-////        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
-//        CameraPosition cameraPosition = new CameraPosition.Builder()
-//                .target(newLocation)
-//                .zoom(17)
-//                .build();
-//        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//
-//    }
-//
-//    private void setGivenLocation(String address){
-//
-//        GeocodeAsyncTask task = new GeocodeAsyncTask(this);
-//        String urlAddress = address.replace(" ", "%20");
-//        task.execute("https://maps.google.com/maps/api/geocode/json?address=" + urlAddress + "&sensor=false");
-//
-//    }
-//
-//    private void setGivenLocation(String lat, String lng){
-//
-//        GeocodeAsyncTask task = new GeocodeAsyncTask(this);
-//        task.execute("https://maps.google.com/maps/api/geocode/json?address=" + lat+"%20"+lng + "&sensor=false");
-//
-//    }
+    private void updateLocation(GeocodeLocationResponse locationResponse, boolean moveCamera, boolean updateInternalLocation) {
 
+        this.formattedAddress = locationResponse.formattedAddress;
+
+        if (updateInternalLocation) {
+            LatLng newLocation = new LatLng(locationResponse.latitude, locationResponse.longitude);
+            this.mMarker.setPosition(newLocation);
+        }
+
+//        mGoogleMap.addMarker(new MarkerOptions().position(newLocation).title("New Location"));
+//        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+        if (moveCamera) {
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(this.mMarker.getPosition())
+                    .zoom(17)
+                    .build();
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
 
 }
 
