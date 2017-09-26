@@ -6,4 +6,5 @@ edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.RSTBTime
 edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.RSTBDatePickerStepGenerator
 org.researchsuite.rsextensionsrstb.LocationStepGenerator
 org.researchsuite.rsextensions.RSTestRedirectStepGenerator
+org.researchsuite.rsextensionsrstb.PermissionRequestStepGenerator
 edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.RSTBDefaultStepGenerator

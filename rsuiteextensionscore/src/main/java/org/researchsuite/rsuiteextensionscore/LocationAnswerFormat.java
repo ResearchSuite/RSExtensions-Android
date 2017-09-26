@@ -32,6 +32,7 @@ public class LocationAnswerFormat extends AnswerFormat implements Serializable {
 
     public LocationAnswerFormat() {
         super();
+        //CT Campus
         this.mDefaultLatitude = 40.756032;
         this.mDefaultLongitude = -73.955938;
     }

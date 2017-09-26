@@ -32,12 +32,12 @@ public class LocationStepGenerator extends RSTBQuestionStepGenerator {
 
     @Override
     public AnswerFormat generateAnswerFormat(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
-        LocationStepDescriptor locationStepDescriptor = helper.getGson().fromJson(jsonObject, LocationStepDescriptor.class);
+//        LocationStepDescriptor locationStepDescriptor = helper.getGson().fromJson(jsonObject, LocationStepDescriptor.class);
+//
+//        TextAnswerFormat answerFormat = new TextAnswerFormat(locationStepDescriptor.maximumLength);
+//        answerFormat.setIsMultipleLines(locationStepDescriptor.multipleLines);
 
-        TextAnswerFormat answerFormat = new TextAnswerFormat(locationStepDescriptor.maximumLength);
-        answerFormat.setIsMultipleLines(locationStepDescriptor.multipleLines);
-
-        return answerFormat;
+        return new LocationAnswerFormat();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class LocationStepGenerator extends RSTBQuestionStepGenerator {
 //        TextAnswerFormat answerFormat = new TextAnswerFormat(locationStepDescriptor.maximumLength);
 //        answerFormat.setIsMultipleLines(locationStepDescriptor.multipleLines);
 
-        LocationAnswerFormat answerFormat = new LocationAnswerFormat();
+        LocationAnswerFormat answerFormat = (LocationAnswerFormat) this.generateAnswerFormat(helper, type, jsonObject);
 
         this.step = new LocationStep(locationStepDescriptor.identifier,locationStepDescriptor.title,locationStepDescriptor.text, answerFormat);
 

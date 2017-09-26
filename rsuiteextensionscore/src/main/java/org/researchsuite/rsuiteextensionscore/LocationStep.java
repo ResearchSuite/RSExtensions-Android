@@ -23,8 +23,6 @@ public class LocationStep extends QuestionStep {
      * @param answerFormat The formart in which the answer is expected
      */
 
-
-
     public LocationStep(String identifier, String title, String text, LocationAnswerFormat answerFormat) {
         super(identifier,title,answerFormat);
         setText(text);

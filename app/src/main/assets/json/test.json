@@ -7,6 +7,17 @@
     "type": "elementList",
     "identifier": "Baseline Survey",
     "elements": [
+      {
+        "identifier"   : "permissionRequest",
+        "type"         : "permissionRequest",
+        "title"        : "We Need Permissions",
+        "text"         : "We need permission to access your location",
+        "buttonText"         : "Grant Permission",
+        "permissions": [
+          "android.permission.ACCESS_FINE_LOCATION",
+          "android.permission.ACCESS_COARSE_LOCATION"
+        ]
+      },
 
       {
         "identifier"   : "location",

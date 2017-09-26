@@ -38,21 +38,6 @@ public class LocationActivity extends Activity implements RSActivityManagerDeleg
         super.onCreate(savedInstanceState);
         RSActivityManager.get().readyToLaunchActivity(this);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-
-            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION  }, 0);
-            return;
-        }
-
-
-
     }
 //    @Override
 //    public void onDataReady() {
@@ -93,7 +78,7 @@ public class LocationActivity extends Activity implements RSActivityManagerDeleg
                     return true;
                 }
 
-                Intent intent = ViewTaskActivity.newIntent(this, task);
+                Intent intent = RSViewTaskActivity.newIntent(this, task);
 
                 this.runningActivity = activityRun;
                 startActivityForResult(intent, REQUEST_RS_ACTIVITY);
@@ -124,19 +109,6 @@ public class LocationActivity extends Activity implements RSActivityManagerDeleg
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == 0) {
-            if (permissions.length == 1 &&
-                    permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // mMap.setMyLocationEnabled(true);
-            } else {
-                // Permission was denied. Display an error message.
-            }
         }
     }
 

@@ -11,8 +11,8 @@ import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.d
 public class LocationStepDescriptor extends RSTBQuestionStepDescriptor{
 
 
-    public int maximumLength = TextAnswerFormat.UNLIMITED_LENGTH;
-    public boolean multipleLines = false;
+//    public int maximumLength = TextAnswerFormat.UNLIMITED_LENGTH;
+//    public boolean multipleLines = false;
 
 
     LocationStepDescriptor() {
