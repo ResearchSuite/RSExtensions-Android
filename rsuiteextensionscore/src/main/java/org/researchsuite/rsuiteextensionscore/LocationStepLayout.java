@@ -11,14 +11,17 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,8 +56,10 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
 
     private LocationStep step;
     private StepResult stepResult;
+    private LinearLayout containerView;
     private TextView titleText;
     private TextView questionDetail;
+    private boolean isEditingLocation;
     private EditText locationField;
     private GoogleMap mGoogleMap;
     private StepCallbacks callbacks;
@@ -139,6 +144,8 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.location_layout, this, true);
 
+        containerView = (LinearLayout) findViewById(R.id.container_linear_layout);
+
         mMapView = (MapView) findViewById(R.id.myMap);
         mMapView.onCreate(null);
 
@@ -186,6 +193,13 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
                 return false;
             }
         });
+
+        locationField.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                isEditingLocation = b;
+            }
+        });
     }
 
     @Override
@@ -215,9 +229,23 @@ public class LocationStepLayout extends FrameLayout implements StepLayout, OnMap
 
     protected void onNextClicked()
     {
-        callbacks.onSaveStep(StepCallbacks.ACTION_NEXT,
-                this.getStep(),
-                this.getStepResult(false));
+        //if we are currently editing the text, make this act like hitting return
+        if (isEditingLocation) {
+            userInput = locationField.getText().toString();
+            if (userInput != "") {
+                handleNewAddressInput(userInput);
+                Log.d("geocode called","called");
+            }
+
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(locationField.getWindowToken(), 0);
+            containerView.requestFocus();
+        }
+        else {
+            callbacks.onSaveStep(StepCallbacks.ACTION_NEXT,
+                    this.getStep(),
+                    this.getStepResult(false));
+        }
 
     }
 
