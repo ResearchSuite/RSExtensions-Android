@@ -14,7 +14,7 @@ public class LocationStepDescriptor extends RSTBQuestionStepDescriptor{
 //    public int maximumLength = TextAnswerFormat.UNLIMITED_LENGTH;
 //    public boolean multipleLines = false;
 
-
+    public String defaultLocationKey;
     LocationStepDescriptor() {
 
     }
