@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
@@ -93,9 +94,22 @@ public abstract class RSRedirectStepLayout extends RelativeLayout implements Ste
         this.mHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message message) {
-                if (getDelegate().isCompleted() && getDelegate().getError() == null) {
+
+                Throwable error = getDelegate().getError();
+                if (getDelegate().isCompleted() && error == null) {
                     moveForward();
                 }
+                else {
+                    StringBuilder builder = new StringBuilder("An error occurred");
+                    if (error instanceof Exception) {
+                        Exception e = (Exception)error;
+                        builder.append(": ");
+                        builder.append(e.getLocalizedMessage());
+                    }
+
+                    Toast.makeText(getContext(), builder.toString(), Toast.LENGTH_SHORT).show();
+                }
+
                 return true;
             }
         });
