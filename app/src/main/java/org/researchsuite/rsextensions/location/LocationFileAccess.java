@@ -4,10 +4,8 @@ import android.content.Context;
 
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.backbone.storage.file.SimpleFileAccess;
+import org.researchsuite.rstb.RSTBStateHelper;
 
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBStateHelper;
-
-//import edu.cornell.tech.foundry.ohmageomhsdk.OhmageOMHSDKCredentialStore;
 
 /**
  * Created by Christina on 6/20/17.

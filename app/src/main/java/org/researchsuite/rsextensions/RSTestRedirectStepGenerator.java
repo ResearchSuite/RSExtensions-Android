@@ -4,18 +4,13 @@ import android.util.Log;
 
 import com.google.gson.JsonObject;
 
-import org.researchstack.backbone.answerformat.AnswerFormat;
-import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
 import org.researchsuite.rsextensionsrstb.RSRedirectStepDescriptor;
+import org.researchsuite.rstb.DefaultStepGenerators.RSTBBaseStepGenerator;
+import org.researchsuite.rstb.RSTBTaskBuilderHelper;
 import org.researchsuite.rsuiteextensionscore.RSRedirectStep;
 
 import java.util.Arrays;
-
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.RSTBBaseStepGenerator;
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.descriptors.RSTBCustomStepDescriptor;
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.descriptors.RSTBQuestionStepDescriptor;
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBTaskBuilderHelper;
 
 /**
  * Created by jameskizer on 8/16/17.

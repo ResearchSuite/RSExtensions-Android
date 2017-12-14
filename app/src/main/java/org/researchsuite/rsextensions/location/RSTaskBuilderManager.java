@@ -4,9 +4,15 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.researchstack.backbone.ResourcePathManager;
+import org.researchsuite.rstb.RSTBConsent.spi.RSTBConsentDocumentGenerator;
+import org.researchsuite.rstb.RSTBConsent.spi.RSTBConsentSectionGenerator;
+import org.researchsuite.rstb.RSTBConsent.spi.RSTBConsentSignatureGenerator;
+import org.researchsuite.rstb.RSTBResourcePathManager;
+import org.researchsuite.rstb.RSTBStateHelper;
+import org.researchsuite.rstb.RSTBTaskBuilder;
 
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBStateHelper;
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBTaskBuilder;
+
+import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -30,13 +36,17 @@ public class RSTaskBuilderManager {
 
     public static void init(
             Context context,
-            ResourcePathManager resourcePathManager,
+            RSTBResourcePathManager resourcePathManager,
             RSTBStateHelper stateHelper
     ) {
         RSTBTaskBuilder builder = new RSTBTaskBuilder(
                 context,
                 resourcePathManager,
-                stateHelper);
+                stateHelper,
+                new ArrayList<RSTBConsentDocumentGenerator>(),
+                new ArrayList<RSTBConsentSectionGenerator>(),
+                new ArrayList<RSTBConsentSignatureGenerator>()
+                );
 
         builder.getStepBuilderHelper().setDefaultResourceType(ResourcePathManager.Resource.TYPE_JSON);
 

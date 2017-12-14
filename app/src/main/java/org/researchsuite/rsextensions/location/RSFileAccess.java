@@ -6,14 +6,13 @@ import android.support.annotation.Nullable;
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.backbone.storage.file.SimpleFileAccess;
 import org.researchstack.backbone.utils.FormatHelper;
+import org.researchsuite.rstb.RSTBStateHelper;
 
 import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBStateHelper;
 
 /**
  * Created by jameskizer on 4/12/17.
