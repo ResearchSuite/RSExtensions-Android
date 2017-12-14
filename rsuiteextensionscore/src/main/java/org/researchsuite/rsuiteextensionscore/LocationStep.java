@@ -1,6 +1,5 @@
 package org.researchsuite.rsuiteextensionscore;
 
-import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.step.QuestionStep;
 
 /**

@@ -2,7 +2,7 @@ package org.researchsuite.rsextensionsrstb;
 
 import com.google.gson.annotations.SerializedName;
 
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.descriptors.RSTBQuestionStepDescriptor;
+import org.researchsuite.rstb.DefaultStepGenerators.descriptors.RSTBQuestionStepDescriptor;
 
 /**
  * Created by jameskizer on 10/10/17.

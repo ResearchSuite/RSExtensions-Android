@@ -3,13 +3,11 @@ package org.researchsuite.rsextensionsrstb;
 import com.google.gson.JsonObject;
 
 import org.researchstack.backbone.step.Step;
+import org.researchsuite.rstb.DefaultStepGenerators.RSTBBaseStepGenerator;
+import org.researchsuite.rstb.RSTBTaskBuilderHelper;
 import org.researchsuite.rsuiteextensionscore.PermissionRequestStep;
-import org.researchsuite.rsuiteextensionscore.RSRedirectStep;
 
 import java.util.Arrays;
-
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.RSTBBaseStepGenerator;
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBTaskBuilderHelper;
 
 /**
  * Created by jameskizer on 9/26/17.
@@ -23,8 +21,6 @@ public class PermissionRequestStepGenerator extends RSTBBaseStepGenerator {
                 "permissionRequest"
         );
     }
-
-
 
     @Override
     public Step generateStep(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {

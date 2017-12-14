@@ -1,9 +1,8 @@
 package org.researchsuite.rsextensionsrstb;
 
-import java.util.List;
+import org.researchsuite.rstb.DefaultStepGenerators.descriptors.RSTBStepDescriptor;
 
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.descriptors.RSTBChoiceStepItemDescriptor;
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.descriptors.RSTBStepDescriptor;
+import java.util.List;
 
 /**
  * Created by jameskizer on 9/26/17.

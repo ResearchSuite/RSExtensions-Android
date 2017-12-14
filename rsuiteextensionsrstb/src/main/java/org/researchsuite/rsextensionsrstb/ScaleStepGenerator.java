@@ -4,13 +4,12 @@ import com.google.gson.JsonObject;
 
 import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.step.Step;
+import org.researchsuite.rstb.DefaultStepGenerators.RSTBQuestionStepGenerator;
+import org.researchsuite.rstb.RSTBTaskBuilderHelper;
 import org.researchsuite.rsuiteextensionscore.scale.ScaleAnswerFormat;
 import org.researchsuite.rsuiteextensionscore.scale.ScaleQuestionStep;
 
 import java.util.Arrays;
-
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.RSTBQuestionStepGenerator;
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBTaskBuilderHelper;
 
 /**
  * Created by jameskizer on 10/10/17.

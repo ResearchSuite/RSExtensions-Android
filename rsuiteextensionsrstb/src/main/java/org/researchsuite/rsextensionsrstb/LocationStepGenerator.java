@@ -5,7 +5,6 @@ package org.researchsuite.rsextensionsrstb;
  */
 
 import android.content.Context;
-import android.location.Location;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -13,16 +12,15 @@ import com.google.gson.JsonObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.researchstack.backbone.answerformat.AnswerFormat;
-import org.researchstack.backbone.answerformat.TextAnswerFormat;
 import org.researchstack.backbone.step.Step;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.RSTBQuestionStepGenerator;
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBStateHelper;
-import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBTaskBuilderHelper;
 
+import org.researchsuite.rstb.DefaultStepGenerators.RSTBQuestionStepGenerator;
+import org.researchsuite.rstb.RSTBStateHelper;
+import org.researchsuite.rstb.RSTBTaskBuilderHelper;
 import org.researchsuite.rsuiteextensionscore.LocationAnswerFormat;
 import org.researchsuite.rsuiteextensionscore.LocationStep;
 
