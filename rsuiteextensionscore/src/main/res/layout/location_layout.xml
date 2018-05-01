@@ -34,6 +34,13 @@
 
         <TextView
             android:id="@+id/question_detail"
+            android:minHeight = "@dimen/rsb_item_size_default"
+            android:gravity = "center_vertical"
+            android:paddingLeft = "@dimen/rsb_margin_left"
+            android:paddingRight= "@dimen/rsb_margin_right"
+            android:paddingTop = "@dimen/rsb_padding_medium"
+            android:paddingBottom = "@dimen/rsb_padding_medium"
+            android:textColor = "?attr/colorAccent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />

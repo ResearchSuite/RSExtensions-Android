@@ -22,7 +22,8 @@
       {
         "identifier"   : "location",
         "type"         : "location",
-        "title"        : "Please enter your location"
+        "title": "Home Location",
+        "text": "Please enter your home location"
       },
       {
         "identifier"   : "redirect",
