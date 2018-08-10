@@ -4,7 +4,7 @@
 ext {
   bintrayRepo = 'maven'
   bintrayName = POM_BINTRAY_NAME
-    userOrgName = 'org-researchsuite'
+  userOrgName = 'org-researchsuite'
 
   publishedGroupId = 'org.researchsuite'
   libraryName = 'ResearchSuite Extensions'

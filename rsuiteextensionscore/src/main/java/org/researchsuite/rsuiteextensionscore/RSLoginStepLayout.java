@@ -2,6 +2,7 @@ package org.researchsuite.rsuiteextensionscore;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -32,10 +33,51 @@ public class RSLoginStepLayout extends RelativeLayout implements StepLayout {
     }
 
     private View progress;
+
+    private boolean isLoading = false;
+
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public void setLoading(boolean loading) {
+
+        boolean hasChanged = isLoading != loading;
+
+        isLoading = loading;
+
+        if (hasChanged) {
+            final boolean localIsLoading = isLoading;
+            final Activity activity = (Activity)this.context;
+
+            activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    if (localIsLoading) {
+                        progress.animate().alpha(1).withStartAction(() -> {
+                            progress.setVisibility(View.VISIBLE);
+                            progress.setAlpha(0);
+                        });
+                    }
+                    else {
+                        progress.animate().alpha(0).withEndAction(() -> progress.setVisibility(View.GONE));
+                    }
+                }
+            });
+        }
+
+
+    }
+
     protected AppCompatEditText identityField;
     protected AppCompatEditText  passwordField;
     private TextView forgotPassword;
+
+    public RSLoginStep getStep() {
+        return step;
+    }
+
     private RSLoginStep step;
+
     private StepResult<Boolean> result;
     private StepCallbacks callbacks;
 
@@ -85,47 +127,69 @@ public class RSLoginStepLayout extends RelativeLayout implements StepLayout {
         progress = layout.findViewById(R.id.progress);
 
         TextView identityLabel = (TextView) layout.findViewById(R.id.identityLabel);
-        identityLabel.setText(this.step.getIdentityFieldName());
-
         identityField = (AppCompatEditText) layout.findViewById(R.id.username);
-        identityField.addTextChangedListener(new TextWatcherAdapter()
-        {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                if(! TextUtils.isEmpty(identityField.getError()))
-                {
-                    identityField.setError(null);
-                }
-            }
-        });
-        identityField.setHint(this.step.getIdentityFieldName());
 
-        passwordField = (AppCompatEditText) layout.findViewById(R.id.password);
-        passwordField.addTextChangedListener(new TextWatcherAdapter()
-        {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                if(! TextUtils.isEmpty(passwordField.getError()))
-                {
-                    passwordField.setError(null);
-                }
-            }
-        });
-        passwordField.setOnEditorActionListener((v, actionId, event) -> {
-            if((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) ||
-                    (actionId == EditorInfo.IME_ACTION_DONE))
-            {
-                return true;
-            }
-            return false;
-        });
+        if (this.step.getShowIdentityField()) {
 
-        passwordField.setHint(this.step.getPasswordFieldName());
+
+            identityLabel.setText(this.step.getIdentityFieldName());
+
+            identityField.addTextChangedListener(new TextWatcherAdapter()
+            {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count)
+                {
+                    if(! TextUtils.isEmpty(identityField.getError()))
+                    {
+                        identityField.setError(null);
+                    }
+                }
+            });
+            identityField.setHint(this.step.getIdentityFieldName());
+
+            identityLabel.setVisibility(VISIBLE);
+            identityField.setVisibility(VISIBLE);
+        }
+        else {
+            identityLabel.setVisibility(GONE);
+            identityField.setVisibility(GONE);
+        }
 
         TextView passwordLabel = (TextView) layout.findViewById(R.id.passwordLabel);
-        passwordLabel.setText(this.step.getPasswordFieldName());
+        passwordField = (AppCompatEditText) layout.findViewById(R.id.password);
+
+        if (this.step.getShowPasswordField()) {
+            passwordField.addTextChangedListener(new TextWatcherAdapter()
+            {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count)
+                {
+                    if(! TextUtils.isEmpty(passwordField.getError()))
+                    {
+                        passwordField.setError(null);
+                    }
+                }
+            });
+            passwordField.setOnEditorActionListener((v, actionId, event) -> {
+                if((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) ||
+                        (actionId == EditorInfo.IME_ACTION_DONE))
+                {
+                    return true;
+                }
+                return false;
+            });
+
+            passwordField.setHint(this.step.getPasswordFieldName());
+            passwordLabel.setText(this.step.getPasswordFieldName());
+
+            passwordField.setVisibility(VISIBLE);
+            passwordLabel.setVisibility(VISIBLE);
+        }
+        else {
+            passwordField.setVisibility(GONE);
+            passwordLabel.setVisibility(GONE);
+        }
+
 
         forgotPassword = (TextView) layout.findViewById(R.id.forgot_password);
         if (this.step.getForgotPasswordButtonTitle() != null && !this.step.getForgotPasswordButtonTitle().isEmpty()) {
@@ -166,32 +230,32 @@ public class RSLoginStepLayout extends RelativeLayout implements StepLayout {
         }
 
         SubmitBar submitBar = (SubmitBar) findViewById(R.id.submit_bar);
-        submitBar.setPositiveAction(v -> signIn());
-        submitBar.setPositiveTitle(this.step.getLogInButtonTitle());
+        submitBar.setPositiveAction(v -> handleLogInTap());
+        submitBar.setPositiveTitle(this.step.getLoginButtonTitle());
         submitBar.getNegativeActionView().setVisibility(GONE);
 
     }
 
-    private void signIn() {
-        final String identity = this.identityField.getText().toString();
-        final String password = this.passwordField.getText().toString();
+    public void handleLogInTap() {
 
-        progress.animate().alpha(1).withStartAction(() -> {
-            progress.setVisibility(View.VISIBLE);
-            progress.setAlpha(0);
-        }).withEndAction(() -> {
-            loginButtonAction(identity, password, new ActionCompletion() {
-                @Override
-                public void onCompletion(boolean moveForward) {
+        if (this.step.getShowIdentityField() && this.identityField.getText().toString().equals("")) {
+            return;
+        }
 
-                    progress.animate().alpha(0).withEndAction(() -> progress.setVisibility(View.GONE));
+        if (this.step.getShowPasswordField() && this.passwordField.getText().toString().equals("")) {
+            return;
+        }
 
-                    if (moveForward) {
-                        callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, step, getResult());
-                    }
+        this.loginButtonAction(this.identityField.getText().toString(), this.passwordField.getText().toString(), new ActionCompletion() {
+            @Override
+            public void onCompletion(boolean moveForward) {
+
+                if (moveForward) {
+                    callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, step, getResult());
                 }
-            });
+            }
         });
+
     }
 
     public StepResult getResult() {
@@ -216,7 +280,7 @@ public class RSLoginStepLayout extends RelativeLayout implements StepLayout {
         this.callbacks = callbacks;
     }
 
-    protected void loginButtonAction(String identity, String password, final ActionCompletion completion) {
+    protected void loginButtonAction(@Nullable String identity, @Nullable String password, final ActionCompletion completion) {
 
         final Activity activity = (Activity)this.context;
         activity.runOnUiThread(new Runnable() {
@@ -227,7 +291,7 @@ public class RSLoginStepLayout extends RelativeLayout implements StepLayout {
 
     }
 
-    protected void forgotPasswordButtonAction(String identity, final ActionCompletion completion) {
+    protected void forgotPasswordButtonAction(@Nullable String identity, final ActionCompletion completion) {
 
         final Activity activity = (Activity)this.context;
         activity.runOnUiThread(new Runnable() {
