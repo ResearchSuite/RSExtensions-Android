@@ -1,5 +1,7 @@
 package org.researchsuite.rsextensionsrstb;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.JsonObject;
 
 import org.researchstack.backbone.answerformat.AnswerFormat;
@@ -10,6 +12,8 @@ import org.researchsuite.rsuiteextensionscore.scale.ScaleAnswerFormat;
 import org.researchsuite.rsuiteextensionscore.scale.ScaleQuestionStep;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by jameskizer on 10/10/17.
@@ -19,12 +23,12 @@ public class ScaleStepGenerator extends RSTBQuestionStepGenerator {
 
     public ScaleStepGenerator(){
         super();
-        this.supportedTypes = Arrays.asList("scale");
+        this.supportedTypes = Collections.singletonList("scale");
     }
 
 
     @Override
-    public AnswerFormat generateAnswerFormat(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
+    public AnswerFormat generateAnswerFormat(@NonNull RSTBTaskBuilderHelper helper, @NonNull String type, @NonNull JsonObject jsonObject) {
 
         ScaleStepDescriptor descriptor = helper.getGson().fromJson(jsonObject,ScaleStepDescriptor.class);
         if (descriptor == null) {
@@ -46,8 +50,7 @@ public class ScaleStepGenerator extends RSTBQuestionStepGenerator {
     }
 
     @Override
-    public Step generateStep(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject) {
-
+    public List<Step> generateSteps(RSTBTaskBuilderHelper helper, String type, JsonObject jsonObject, String identifierPrefix) {
         ScaleStepDescriptor descriptor = helper.getGson().fromJson(jsonObject,ScaleStepDescriptor.class);
         if (descriptor == null) {
             return null;
@@ -58,12 +61,12 @@ public class ScaleStepGenerator extends RSTBQuestionStepGenerator {
             return null;
         }
 
-        Step step =  new ScaleQuestionStep(descriptor.identifier, descriptor.title, answerFormat);
+        String identifier = this.combineIdentifiers(descriptor.identifier, identifierPrefix);
+        Step step =  new ScaleQuestionStep(identifier, descriptor.title, answerFormat);
         step.setText(descriptor.text);
         step.setOptional(descriptor.optional);
 
-        return step;
-
+        return Collections.singletonList(step);
     }
 
 
